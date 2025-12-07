@@ -1,0 +1,19 @@
+# Python caches
+__pycache__/
+*.pyc
+
+# Virtual env
+rag-service/
+.env/
+venv/
+.env*/
+.vscode/
+
+# Cloned repos from ingestion
+repos/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+.env
