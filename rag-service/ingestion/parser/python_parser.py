@@ -115,3 +115,5 @@ def edge_name_resolution(nodes : List, edges: List):
         target = e["target"]
         if target in node_lookup: # o(1) lookup 
             e["target"] = node_lookup[target][0]
+    
+    return edges
