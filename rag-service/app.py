@@ -3,12 +3,12 @@ from pydantic import BaseModel
 import os
 from ingestion import repo_manager, file_scanner
 from ingestion.parser.python_parser import ast_parser, edge_name_resolution
-
+from pipeline.chunking import make_chunks
+from pipeline.embedding import embedding_pipeline
+from pipeline.vectorstore import chromaDBstorage
 
 app = FastAPI()
 BASE_DIR = "repos"
-
-
 
 class IngestReq(BaseModel):
     repo_id : str
@@ -24,12 +24,23 @@ async def ingest_repo(req : IngestReq):
     files = file_scanner.scan(repo_path=repo_path)
     nodes , edges = ast_parser(files)
     edges  = edge_name_resolution(nodes,edges)
+    chunks = make_chunks(nodes, req.repo_id)
+    embedded_chunks = embedding_pipeline(chunks)
+    chromaDBstorage(chunks=embedded_chunks)
     
-    return{
-        "nodes" : nodes,
-        "edges" : edges,
-        "repo_id" : req.repo_id,
-        "repo_url" : req.repo_url,
-        "status" : "Repo cloned and scanned",
-        "files" : files
-    }
+    
+    # for postman testing
+    
+    # return{
+    #     "nodes" : nodes,
+    #     "edges" : edges,
+    #     "repo_id" : req.repo_id,
+    #     "repo_url" : req.repo_url,
+    #     "files" : files,
+    #     "embedded_chunks" : embedded_chunks,
+    # }
+    
+    return {
+		"repo_id": req.repo_id,
+		"status": "ingestion complete"
+	}
