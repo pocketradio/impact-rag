@@ -6,6 +6,8 @@ from ingestion.parser.python_parser import ast_parser, edge_name_resolution
 from pipeline.chunking import make_chunks
 from pipeline.embedding import embedding_pipeline
 from pipeline.vectorstore import chromaDBstorage
+from pipeline.retriever import transform_query, retrieve
+from llm import generate_llm_response
 
 app = FastAPI()
 BASE_DIR = "repos"
@@ -44,3 +46,18 @@ async def ingest_repo(req : IngestReq):
 		"repo_id": req.repo_id,
 		"status": "ingestion complete"
 	}
+    
+
+class QueryRequest(BaseModel):
+    user_query : str
+    repo_id : str
+    repo_url : str
+
+@app.post("/query")
+
+async def query_user_input(req : QueryRequest):
+    embedded_query = transform_query(query = req.user_query)
+    retrieved_results = retrieve(embedded_query, repo_id=req.repo_id)
+    llm_response = generate_llm_response(retrieved_results, user_query=req.user_query)
+    
+    return llm_response
