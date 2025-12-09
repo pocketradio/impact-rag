@@ -1,4 +1,5 @@
-def make_chunks(nodes):
+from uuid import uuid4
+def make_chunks(nodes, repo_id):
     
     all_chunks = []
     file_cache = {}         # stores code lines from each file 
@@ -27,7 +28,9 @@ def make_chunks(nodes):
                     "code" : "\n".join(sub_chunk), 
                     "file" : node["file"],
                     "name" : node["name"],
-                    "type" : node["type"]
+                    "type" : node["type"],
+                    "id" : str(uuid4()),
+                    "repo_id" : repo_id
                 })
             continue
         
@@ -38,7 +41,9 @@ def make_chunks(nodes):
             "code" : code, 
             "file" : node["file"],
             "name" : node["name"],
-            "type" : node["type"]
+            "type" : node["type"],
+            "id" : str(uuid4()),
+            "repo_id" : repo_id
         })
 
     return all_chunks
