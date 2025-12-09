@@ -13,6 +13,9 @@ def ast_parser(files):
         with open(file, "r", encoding="utf-8") as f:
             source = f.read()
         
+        if not file.endswith(".py"):
+            continue
+        
         tree = ast.parse(source)
         
         for element in ast.walk(tree):
@@ -30,7 +33,8 @@ def ast_parser(files):
                     "id" : id,
                     'type': "function",
                     "name" : element.name, 
-                    "lineno" : element.lineno, 
+                    "lineno" : element.lineno,
+                    "endlineno" : element.end_lineno, 
                     "file": file
                     })
 
@@ -41,6 +45,7 @@ def ast_parser(files):
                     "type" : "class", 
                     "name" : element.name,
                     "lineno" : element.lineno,
+                    "endlineno" : element.end_lineno,
                     "id" : f"{file}:{element.name}",
                     "file" : file
                 })
