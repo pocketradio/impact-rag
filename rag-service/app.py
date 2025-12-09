@@ -9,8 +9,21 @@ from pipeline.vectorstore import chromaDBstorage
 from pipeline.retriever import transform_query, retrieve
 from llm import generate_llm_response
 
+
+
+
 app = FastAPI()
 BASE_DIR = "repos"
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+	CORSMiddleware,
+	allow_origins=["*"],
+	allow_methods=["*"],
+	allow_headers=["*"],
+)
+
 
 class IngestReq(BaseModel):
     repo_id : str
