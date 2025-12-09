@@ -1,8 +1,0 @@
-langchain-core
-langchain
-langchain-community
-pymupdf
-uvicorn
-fastapi
-gitpython
-pydantic
