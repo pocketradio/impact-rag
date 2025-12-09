@@ -17,3 +17,6 @@ repos/
 Thumbs.db
 
 .env
+
+
+chroma_db/
