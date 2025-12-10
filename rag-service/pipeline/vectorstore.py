@@ -15,14 +15,14 @@ def chromaDBstorage(chunks):
     
     # preparation using chunks 
     for chunk in chunks:
-        ids.append(chunk["id"])
+        ids.append(chunk['metadata']["id"])
         embeddings.append(chunk["embedding"])
-        metadatas.append({
-            "name" : chunk["name"],
-            "repo_id" : chunk["repo_id"],
-            "file" : chunk["file"],
-            "type" : chunk["type"]
-        })
+        metadatas.append(chunk["metadata"])
+            # "name" : chunk["name"],
+            # "repo_id" : chunk["repo_id"],
+            # "file" : chunk["file"],
+            # "type" : chunk["type"]
+            
         documents.append(chunk["code"])
     
     # vector store : 
@@ -58,3 +58,6 @@ def query_collection(embedded_query, top_k, repo_id):
 			results["metadatas"][0],
 		)
 	]
+    
+    # [0] needed because chroma returns batched queries ; [[id1, id2, ....]]
+    
